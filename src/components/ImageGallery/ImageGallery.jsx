@@ -1,44 +1,65 @@
 import React from 'react';
+import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import css from '../Styles.module.css';
+import { ImagePendingView } from 'components/ImagePendingView/ImagePandingView';
+import { ImageLoadingView } from 'components/ImageLoadingView/ImageLoadingView';
+import { ImageErrorView } from 'components/ImageErrorView/ImageErrorView';
+import { fetchImages } from 'Servises/Pixabay-api';
+import { ButtonLoadMore } from 'components/ButtonLoadMore/ButtonLoadMore';
+
 
 
 export class ImageGallery extends React.Component {
     state = {
-        images: {
-            hits: []
-        },
-        loading: false,
+        images: null,
+        error: null,
+        status: 'idle',
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const KEY_API = '29186842-8a22994ff73abec3697b1eb66';
         const searchValue = this.props.searchValue;
         if (prevProps.searchValue !== searchValue) {
-            this.setState({ loading: true });
+            this.setState({ status: 'pending' });
 
-            fetch(`https://pixabay.com/api/?q=${searchValue}&page=1&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12`)
-            .then(res => res.json())
-            .then(images => this.setState({ images }))
-            .finally(() => this.setState({loading: false}))
+                fetchImages(searchValue)
+                .then(({ total, totalHits, hits }) =>{
+                    this.setState({ images: { total, totalHits, hits }, status: 'resolved' })
+                
+                    if (total === 0) {
+                        this.setState({ status: 'rejected' })
+                        return Promise.reject(new Error(`It's sad, but we have a problem! We can't find a ${searchValue}! Change it please!`))
+                    }}
+            )
+            .catch(error => this.setState({error, status: 'rejected'}))
             
         }
     }
-
-
+    
     render() {
-        const { loading, images } = this.state;
-        const { searchValue } = this.props;
+        const { images, error, status } = this.state;
 
-        return <ul className={css.ImageGallery}>
-            {loading && <p>Loading... Please wait</p>}
-            {!searchValue && <p>Enter search Value</p>}
-            {images.hits.map(image => <li key={image.id}>
-                    <img className={css.ImageGalleryItem_image } src={image.webformatURL} alt="" />
-                </li>)
-            }
-</ul>
+        if (status === 'idle') {
+            return <ImagePendingView/> 
+        }
+
+        if (status === 'pending') {
+            return <ImageLoadingView/>
+        }
+
+        if (status === 'rejected') {
+            return <ImageErrorView wrongValue={ error.message} />
+        }
+
+        if (status === 'resolved') {
+            return (<>
+                <ul className={css.ImageGallery}>
+                {images.hits.map(({id, webformatURL, tag}) => <ImageGalleryItem key={id} webformatURL={webformatURL} tag={tag} />)}
+            </ul>
+                <ButtonLoadMore loadMore={ } />
+            </>)
+        }
+
     }
-
 }
 
 

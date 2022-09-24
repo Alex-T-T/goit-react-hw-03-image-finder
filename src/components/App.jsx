@@ -22,23 +22,16 @@ export class App extends React.Component {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        fontSize: 40,
+        fontSize: 24,
         color: '#010101'
       }}
     >
       <Searchbar onSubmit={this.handleFormSubmit} />
-      {/* <ToastContainer position="top-center"
-                      autoClose={3000}
-                      hideProgressBar={false}
-                      newestOnTop={false}
-                      closeOnClick
-                      rtl={false}
-                      pauseOnFocusLoss
-                      draggable
-                      pauseOnHover/> */}
+      {/* <ToastContainer position="top-center" autoClose={3000}/> */}
     
       <ImageGallery searchValue={ this.state.value} />
     
+      
     </div>
       
   );}

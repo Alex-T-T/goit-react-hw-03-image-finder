@@ -5,7 +5,9 @@ import { ImagePendingView } from 'components/ImagePendingView/ImagePandingView';
 import { ImageLoadingView } from 'components/ImageLoadingView/ImageLoadingView';
 import { ImageErrorView } from 'components/ImageErrorView/ImageErrorView';
 import { fetchImages } from 'Servises/Pixabay-api';
-import { ButtonLoadMore } from 'components/ButtonLoadMore/ButtonLoadMore';
+// import { ButtonLoadMore } from 'components/ButtonLoadMore/ButtonLoadMore';
+import { Modal } from 'components/Modal/Modal';
+
 
 
 
@@ -14,6 +16,7 @@ export class ImageGallery extends React.Component {
         images: null,
         error: null,
         status: 'idle',
+        showModal: false,
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -35,8 +38,14 @@ export class ImageGallery extends React.Component {
         }
     }
     
+    toggleModal = () => {
+        this.setState(({showModal}) => ({
+            showModal: !showModal
+        }))
+    }
+
     render() {
-        const { images, error, status } = this.state;
+        const { images, error, status, showModal } = this.state;
 
         if (status === 'idle') {
             return <ImagePendingView/> 
@@ -51,12 +60,19 @@ export class ImageGallery extends React.Component {
         }
 
         if (status === 'resolved') {
+    const alt = "dog";
+    const src = "https://pixabay.com/get/g46a56e63b041725751ac805e3239d63dc743cc7d51fc16bd7a91515b0588674e8812c03af3e49eed63d906c1499864dbdfb1eff7ddbd7634ad584a716b935079_1280.jpg"
+            
+
+
             return (<>
                 <ul className={css.ImageGallery}>
-                {images.hits.map(({id, webformatURL, tag}) => <ImageGalleryItem key={id} webformatURL={webformatURL} tag={tag} />)}
+                    {images.hits.map(({ id, webformatURL, largeImageURL, tag }) => <ImageGalleryItem key={id} webformatURL={webformatURL} tag={tag} onClick={this.toggleModal } />)}
             </ul>
                 {/* <ButtonLoadMore onClick={ } /> */}
-            </>)
+                {showModal && <Modal onClose={ this.toggleModal}> <img src={src} alt={alt} /> </Modal >}
+                
+                </>)
         }
 
     }

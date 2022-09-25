@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import React from 'react';
 import css from '../Styles.module.css';
 import { BsSearch } from 'react-icons/bs';
-//  import { toast } from 'react-toastify';
+
 
 export class Searchbar extends React.Component {
     state = {

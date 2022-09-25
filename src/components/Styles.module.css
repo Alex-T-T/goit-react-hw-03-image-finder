@@ -182,7 +182,7 @@ img {
 }
 
 .Modal {
-  max-width: calc(100vw - 48px);
+  max-width: calc(100vw - 248px);
   max-height: calc(100vh - 24px);
 }
 
@@ -219,7 +219,7 @@ img {
  * styles for ImageErrorView
 */
 
-.wrong {
+.wrongValue {
   font-size: 20px;
   text-align: center;
   color: red;

@@ -224,3 +224,16 @@ img {
   text-align: center;
   color: red;
 }
+
+/*===
+ * styles for ImageLoadingView
+*/
+
+.loadinViewloadinView {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+
+}

@@ -5,47 +5,60 @@ import { ImagePendingView } from 'components/ImagePendingView/ImagePandingView';
 import { ImageLoadingView } from 'components/ImageLoadingView/ImageLoadingView';
 import { ImageErrorView } from 'components/ImageErrorView/ImageErrorView';
 import { fetchImages } from 'Servises/Pixabay-api';
-// import { ButtonLoadMore } from 'components/ButtonLoadMore/ButtonLoadMore';
-import { Modal } from 'components/Modal/Modal';
+import { ButtonLoadMore } from 'components/ButtonLoadMore/ButtonLoadMore';
+// import { Modal } from 'components/Modal/Modal';
 
 
 
 
 export class ImageGallery extends React.Component {
     state = {
-        images: null,
+        images: {
+            hits: [],
+            totalHits: '',
+            total: '',
+        },
         error: null,
         status: 'idle',
-        showModal: false,
+        // showModal: false,
+        page: 1,
     }
 
     componentDidUpdate(prevProps, prevState) {
         const searchValue = this.props.searchValue;
-        if (prevProps.searchValue !== searchValue) {
+        if (prevProps.searchValue !== searchValue || 
+            prevState.page !== this.state.page ) {
             this.setState({ status: 'pending' });
 
-                fetchImages(searchValue)
-                .then(({ total, totalHits, hits }) =>{
-                    this.setState({ images: { total, totalHits, hits }, status: 'resolved' })
+            console.log("prevState =>", prevState.page);
+            console.log("thisState =>", this.state.page);
+
+            fetchImages(searchValue, this.state.page)
+                .then(({ total, totalHits, hits }) => {
+                this.setState(prevState => ({
+                    images: {
+                        hits: [...prevState.images.hits, ...hits],
+                        totalHits,
+                        total,
+                    },
+                    status: 'resolved',
+                }));
+                // this.setState({ images: { total, totalHits, hits }, status: 'resolved', })
                 
-                    if (total === 0) {
-                        this.setState({ status: 'rejected' })
-                        return Promise.reject(new Error(`It's sad, but we have a problem! We can't find a ${searchValue}! Change it please!`))
-                    }}
+                if (total === 0) {
+                    this.setState({ status: 'rejected' })
+                    return Promise.reject(new Error(`It's sad, but we have a problem! We can't find a ${searchValue}! Change it please!`))
+                }}
             )
             .catch(error => this.setState({error, status: 'rejected'}))
             
         }
     }
-    
-    toggleModal = () => {
-        this.setState(({showModal}) => ({
-            showModal: !showModal
-        }))
-    }
 
+    loadMore = () => {this.setState(prevState => ({ page: prevState.page + 1 }))};
+    
     render() {
-        const { images, error, status, showModal } = this.state;
+        const { images, error, status} = this.state;
 
         if (status === 'idle') {
             return <ImagePendingView/> 
@@ -60,23 +73,24 @@ export class ImageGallery extends React.Component {
         }
 
         if (status === 'resolved') {
-    const alt = "dog";
-    const src = "https://pixabay.com/get/g46a56e63b041725751ac805e3239d63dc743cc7d51fc16bd7a91515b0588674e8812c03af3e49eed63d906c1499864dbdfb1eff7ddbd7634ad584a716b935079_1280.jpg"
-            
-
 
             return (<>
                 <ul className={css.ImageGallery}>
-                    {images.hits.map(({ id, webformatURL, largeImageURL, tag }) => <ImageGalleryItem key={id} webformatURL={webformatURL} tag={tag} onClick={this.toggleModal } />)}
+                    {images.hits.map(({ id, webformatURL, largeImageURL, tags }) =>
+                            <ImageGalleryItem
+                            key={id}
+                            webformatURL={webformatURL}
+                            tags={tags}
+                            bigURL={largeImageURL}
+                        />
+                    )}
             </ul>
-                {/* <ButtonLoadMore onClick={ } /> */}
-                {showModal && <Modal onClose={ this.toggleModal}> <img src={src} alt={alt} /> </Modal >}
-                
+                <ButtonLoadMore onClick={ this.loadMore} />
                 </>)
         }
 
     }
 }
 
-
+//  <ButtonLoadMore value={this.props.searchValue} page={ this.handleLoadMore} />
 

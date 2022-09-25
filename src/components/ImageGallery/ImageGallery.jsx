@@ -55,7 +55,7 @@ export class ImageGallery extends React.Component {
                 <ul className={css.ImageGallery}>
                 {images.hits.map(({id, webformatURL, tag}) => <ImageGalleryItem key={id} webformatURL={webformatURL} tag={tag} />)}
             </ul>
-                <ButtonLoadMore loadMore={ } />
+                {/* <ButtonLoadMore onClick={ } /> */}
             </>)
         }
 

@@ -1,13 +1,29 @@
 import React from "react"
 import css from '../Styles.module.css';
+import PropTypes from 'prop-types';
 
-export class ButtonLoadMore extends React.Component {
 
-
-    render() {
-        return <button className={css.Button}
+export const ButtonLoadMore = ({onClick}) => {
+    return <button className={css.Button}
             type='submit'
-            onClick={this.props.onClick}
+            onClick={onClick}
         > Load More </button>
-    }
 }
+
+ButtonLoadMore.propTypes = {
+    onClick: PropTypes.func,
+}
+
+
+
+
+
+// export class ButtonLoadMore extends React.Component {
+//     render() {
+//         return <button className={css.Button}
+//             type='submit'
+//             onClick={this.props.onClick}
+//         > Load More </button>
+//     }
+// }
+

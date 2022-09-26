@@ -1,30 +1,52 @@
-import React from 'react';
+// import React from 'react';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import css from '../Styles.module.css';
-// import { ImagePendingView } from 'components/ImagePendingView/ImagePandingView';
-// import { ImageLoadingView } from 'components/ImageLoadingView/ImageLoadingView';
-// import { ImageErrorView } from 'components/ImageErrorView/ImageErrorView';
-// import { fetchImages } from 'Servises/Pixabay-api';
-// import { ButtonLoadMore } from 'components/ButtonLoadMore/ButtonLoadMore';
+import PropTypes from 'prop-types';
+
+export const ImageGallery = ({images}) => {
+    return <ul className={css.ImageGallery}>
+            {images.map(({ id, webformatURL, largeImageURL, tags }) =>
+                <ImageGalleryItem
+                    key={id}
+                    webformatURL={webformatURL}
+                    tags={tags}
+                    bigURL={largeImageURL}
+                />
+            )}
+        </ul>
+}
 
 
-export class ImageGallery extends React.Component {
+ImageGallery.propTypes = {
+    images: PropTypes.arrayOf(
+        PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        webformatURL: PropTypes.string.isRequired,
+        largeImageURL: PropTypes.string.isRequired,
+        tags: PropTypes.string.isRequired,
+      }))
+}
 
-    render() {
-        return  <ul className={css.ImageGallery}>
-                    {this.props.images.map(({ id, webformatURL, largeImageURL, tags }) =>
-                            <ImageGalleryItem
-                            key={id}
-                            webformatURL={webformatURL}
-                            tags={tags}
-                            bigURL={largeImageURL}
-                        />
-                    )}
-            </ul>
-    }
+// export class ImageGallery extends React.Component {
+
+//     render() {
+        // return <ul className={css.ImageGallery}>
+        //     {this.props.images.map(({ id, webformatURL, largeImageURL, tags }) =>
+        //         <ImageGalleryItem
+        //             key={id}
+        //             webformatURL={webformatURL}
+        //             tags={tags}
+        //             bigURL={largeImageURL}
+        //         />
+        //     )}
+        // </ul>
+//     }
+// }
 
 
 
+
+// =================================================================================================
     // state = {
     //     images: {
     //         hits: [],
@@ -123,5 +145,5 @@ export class ImageGallery extends React.Component {
     //     }
 
     // }
-}
+// }
 

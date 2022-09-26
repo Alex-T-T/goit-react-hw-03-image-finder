@@ -90,8 +90,7 @@ export class App extends React.Component {
         });
   }
 
-  loadMore = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
+  loadMore = () => { this.setState(prevState => ({ page: prevState.page + 1 }));
     console.log('this.state.page =>', this.state.page)
   };
     

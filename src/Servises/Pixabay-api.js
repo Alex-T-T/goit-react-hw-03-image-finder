@@ -1,8 +1,8 @@
 
-export const fetchImages = async (value, page) => {
+export const fetchImages = async (value, page, perPage) => {
     const KEY_API = '29186842-8a22994ff73abec3697b1eb66';
     console.log('page on fetch =>', page)
-    const response = await fetch(`https://pixabay.com/api/?q=${value}&page=${page}&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=3`);
+    const response = await fetch(`https://pixabay.com/api/?q=${value}&page=${page}&key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=${perPage}`);
     if (response.ok) {
         return response.json();
     }

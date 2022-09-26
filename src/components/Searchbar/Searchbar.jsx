@@ -21,7 +21,7 @@ export class Searchbar extends React.Component {
             return
         };
 
-        this.props.onSubmit(this.state.value);
+        this.props.onSubmit(this.state);
         this.setState({value: ''})
     }
 

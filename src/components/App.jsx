@@ -23,7 +23,7 @@ export class App extends React.Component {
     error: null,
     status: 'idle',
     page: 1,
-    perPage: 20,
+    perPage: 12,
     isLoadMore: true,
   }
 

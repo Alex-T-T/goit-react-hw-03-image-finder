@@ -229,7 +229,7 @@ img {
  * styles for ImageLoadingView
 */
 
-.loadinViewloadinView {
+.loadingView {
   display: flex;
   flex-direction: column;
   align-items: center;

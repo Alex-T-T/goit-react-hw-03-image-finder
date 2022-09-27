@@ -21,7 +21,7 @@ export class App extends React.Component {
     },
     value: '',
     error: null,
-    status: 'idle',
+    isLoading: false,
     page: 1,
     perPage: 12,
     isLoadMore: true,
@@ -35,7 +35,8 @@ export class App extends React.Component {
 
     if (prevState.value !== value ||
       prevState.page !== this.state.page) {
-      this.setState({status: 'pending'});
+    
+      this.setState({isLoading: true,})
 
       console.log("prevState.page =>", prevState.page);
       console.log("thisState.page =>", page);
@@ -48,14 +49,14 @@ export class App extends React.Component {
               totalHits,
               total,
             },
-            status: 'resolved',
+          isLoading: false,
           }));
                 
 
         const totalPages = Math.ceil(totalHits / perPage);
 
 
-        if (page === 1) {
+        if (hits.length !== 0 && page === 1 ) {
           toast.success(` We found ${totalHits} images.`);
           this.setState({isLoadMore: true,})
         }
@@ -66,12 +67,15 @@ export class App extends React.Component {
         }
 
 
-          if (total === 0) {
-            this.setState({ status: 'rejected' })
-            return Promise.reject(new Error(`It's sad, but we have a problem! We can't find a ${value}! Change it please!`))
+          if (totalHits === 0) {
+            
+            return Promise.reject(new Error(`It's sad, but we have a problem! We can't find a "${value}"! Change your request please!`))
           }
         })
-        .catch(error => this.setState({ error, status: 'rejected' }))
+        .catch(error => {this.setState({ error })
+          Promise.reject(new Error(`${error.message}`))
+          toast.error(` We can't find a "${value}"! `);
+        })
     }
   }
 
@@ -94,52 +98,83 @@ export class App extends React.Component {
     console.log('this.state.page =>', this.state.page)
   };
     
-  render() {
-    const { error, status, isLoadMore } = this.state;
-    
-
-    if (status === 'idle') {
-      return <>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImagePendingView />
-      </>
-    }
-
-    if (status === 'pending') {
-      return <>
-      <Searchbar onSubmit={this.handleFormSubmit} />
-      <ImageLoadingView />
-      </>
-    }
-
-    if (status === 'rejected') {
-      return <>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageErrorView wrongValue={error.message} />
-      </>
-
-    }
-
-    if (status === 'resolved') {
-      return ( <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 24,
-        color: '#010101'
-      }}
+  render() { 
+    const {images, error, isLoadMore, isLoading } = this.state
+    return ( <div style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          fontSize: 24,
+                          color: '#010101'
+                        }}
       >
-        <Searchbar onSubmit={this.handleFormSubmit} />
+      <Searchbar onSubmit={this.handleFormSubmit} />
+      
+      { images.hits.length !== 0 && <>
         <ImageGallery images={this.state.images.hits } />
         {isLoadMore && <ButtonLoadMore onClick={this.loadMore} />}
+      </>
+      }
+      { images.hits.length === 0 && !isLoading && <ImagePendingView />}
+      {isLoading && <ImageLoadingView />}
+      {error && <ImageErrorView wrongValue={error.message} />}
+      
         <ToastContainer theme="dark" position="bottom-center" autoClose={3000} />
       </div>)
-    }
+      
+
   }
+
+
 }
 
+
+
+  // render() {
+  //   const { error, status, isLoadMore } = this.state;
+    
+
+  //   if (status === 'idle') {
+  //     return <>
+        // <Searchbar onSubmit={this.handleFormSubmit} />
+        // <ImagePendingView />
+  //     </>
+  //   }
+
+  //   if (status === 'pending') {
+  //     return <>
+  //     <Searchbar onSubmit={this.handleFormSubmit} />
+      // <ImageLoadingView />
+  //     </>
+  //   }
+
+  //   if (status === 'rejected') {
+  //     return <>
+  //       <Searchbar onSubmit={this.handleFormSubmit} />
+  //       <ImageErrorView wrongValue={error.message} />
+  //     </>
+
+  //   }
+
+  //   if (status === 'resolved') {
+  //     return ( <div
+  //     style={{
+  //       display: 'flex',
+  //       flexDirection: 'column',
+  //       justifyContent: 'center',
+  //       alignItems: 'center',
+  //       fontSize: 24,
+  //       color: '#010101'
+  //     }}
+  //     >
+  //       <Searchbar onSubmit={this.handleFormSubmit} />
+  //       <ImageGallery images={this.state.images.hits } />
+  //       {isLoadMore && <ButtonLoadMore onClick={this.loadMore} />}
+  //       <ToastContainer theme="dark" position="bottom-center" autoClose={3000} />
+  //     </div>)
+  //   }
+  // }
 
 
 

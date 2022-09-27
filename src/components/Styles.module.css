@@ -219,7 +219,7 @@ img {
  * styles for ImageErrorView
 */
 
-.wrongValue {
+.wrong {
   font-size: 20px;
   text-align: center;
   color: red;

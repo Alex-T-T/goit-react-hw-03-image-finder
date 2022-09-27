@@ -11,7 +11,7 @@ export const ButtonLoadMore = ({onClick}) => {
 }
 
 ButtonLoadMore.propTypes = {
-    onClick: PropTypes.func,
+    onClick: PropTypes.func.isRequired,
 }
 
 

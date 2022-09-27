@@ -1,8 +1,9 @@
-// import PropTypes from 'prop-types';
+
 import React from 'react';
 import css from '../Styles.module.css';
 import { BsSearch } from 'react-icons/bs';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 
 
@@ -19,7 +20,8 @@ export class Searchbar extends React.Component {
         event.preventDefault();
 
         if (this.state.value.trim() === '') {
-            alert ("Enter search value !");
+            // alert ("Enter search value !");
+            toast.error("Enter search value !");
             return
         };
 

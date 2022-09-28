@@ -11,6 +11,15 @@ export class Searchbar extends React.Component {
     state = {
         value: '',
     }
+
+//     componentDidUpdate(prevProps, prevState) {
+    
+//         if (prevState.value === this.state.value) {
+//             toast.error("Enter new search value or press 'Load More' !");
+//             return
+//         }
+// }
+
     // збирає інформацію з інпута
     handleSearchValue = (event) => {
         this.setState({ value: event.currentTarget.value.toLowerCase() });
@@ -20,13 +29,13 @@ export class Searchbar extends React.Component {
         event.preventDefault();
 
         if (this.state.value.trim() === '') {
-            // alert ("Enter search value !");
             toast.error("Enter search value !");
             return
         };
 
+
         this.props.onSubmit(this.state);
-        this.setState({value: ''})
+        // this.setState({value: ''})
     }
 
     render() {

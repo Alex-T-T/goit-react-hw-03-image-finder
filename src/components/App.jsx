@@ -36,7 +36,7 @@ export class App extends React.Component {
     if (prevState.value !== value ||
       prevState.page !== this.state.page) {
     
-      this.setState({isLoading: true,})
+      this.setState({ isLoading: true, error: null})
 
       console.log("prevState.page =>", prevState.page);
       console.log("thisState.page =>", page);
@@ -49,13 +49,14 @@ export class App extends React.Component {
               totalHits,
               total,
             },
-          isLoading: false,
+            isLoading: false,
+          
           }));
                 
 
+
         const totalPages = Math.ceil(totalHits / perPage);
-
-
+          
         if (hits.length !== 0 && page === 1 ) {
           toast.success(` We found ${totalHits} images.`);
           this.setState({isLoadMore: true,})
@@ -68,11 +69,11 @@ export class App extends React.Component {
 
 
           if (totalHits === 0) {
-            
             return Promise.reject(new Error(`It's sad, but we have a problem! We can't find a "${value}"! Change your request please!`))
           }
         })
-        .catch(error => {this.setState({ error })
+        .catch(error => {
+          this.setState({ error })
           Promise.reject(new Error(`${error.message}`))
           toast.error(` We can't find a "${value}"! `);
         })
@@ -83,6 +84,12 @@ export class App extends React.Component {
   handleFormSubmit = ({value}) => {
         // console.log('this.state.value =>', this.state.value);
         // console.log('this.state.images =>', this.state.images);
+        
+    if (value === this.state.value) {
+        toast.error("Enter new search value or press 'Load More' !");
+        return
+      }
+    
         return this.setState({
           value, 
           images: {
@@ -106,7 +113,8 @@ export class App extends React.Component {
                           justifyContent: 'center',
                           alignItems: 'center',
                           fontSize: 24,
-                          color: '#010101'
+                          color: '#010101',
+                          paddingTop: '80px',
                         }}
       >
       <Searchbar onSubmit={this.handleFormSubmit} />
